@@ -7,13 +7,13 @@ import { ROUTES } from '../../constants/routes';
  * Wraps a <Route> so it redirects to /login when the user is not authenticated.
  */
 function PrivateRoute({ component: Component, ...rest }) {
-  const { isAuthenticated } = useAuth();
+  const { authState } = useAuth();
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        true ? (
+        authState?.isAuthenticated ? (
           <Component {...props} />
         ) : (
           <Redirect to={{ pathname: ROUTES.LOGIN, state: { from: props.location } }} />

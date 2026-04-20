@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -6,8 +6,6 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  Box,
-  Typography
 } from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 

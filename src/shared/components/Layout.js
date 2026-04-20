@@ -3,7 +3,6 @@ import {
   AppBar,
   Box,
   CssBaseline,
-  Divider,
   Drawer,
   IconButton,
   List,
@@ -27,7 +26,7 @@ const NAV_ITEMS = [
   { label: 'Consulta Clientes', abbr: 'CC', color: '#00b0ff', path: ROUTES.CLIENTS },
 ];
 
-function DrawerContent({ username, onNavigate }) {
+function DrawerContent({ username, onNavigate, items = NAV_ITEMS }) {
   return (
     <Box sx={{ height: '100%', overflowY: 'auto', bgcolor: '#f4f7f9' }}>
       {/* User avatar + name */}
@@ -67,7 +66,7 @@ function DrawerContent({ username, onNavigate }) {
 
       {/* Nav menu */}
       <List disablePadding sx={{ pt: 2 }}>
-        {NAV_ITEMS.map((item) => (
+        {items.map((item) => (
           <ListItemButton
             key={item.path}
             onClick={() => onNavigate(item.path)}
@@ -105,10 +104,17 @@ function DrawerContent({ username, onNavigate }) {
   );
 }
 
-function Layout({ children }) {
-  const { username, logout } = useAuth();
+function Layout({ children, houseItem = false }) {
+  const { authState, logout } = useAuth();
   const history = useHistory();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const username = authState?.user?.nombre;
+
+  // If houseItem is true, include Home in navigation items
+  const menuItems = houseItem 
+    ? [...NAV_ITEMS] 
+    : NAV_ITEMS.filter(item => item.path !== ROUTES.HOME);
 
   const handleToggle = () => setMobileOpen((prev) => !prev);
 
@@ -202,7 +208,7 @@ function Layout({ children }) {
             '& .MuiDrawer-paper': { ...drawerSx, mt: '64px' },
           }}
         >
-          <DrawerContent username={username} onNavigate={handleNavigate} />
+          <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
         </Drawer>
 
         {/* Desktop: permanent */}
@@ -215,7 +221,7 @@ function Layout({ children }) {
           open
         >
           <Toolbar /> {/* spacer for AppBar height */}
-          <DrawerContent username={username} onNavigate={handleNavigate} />
+          <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
         </Drawer>
       </Box>
 

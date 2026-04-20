@@ -17,9 +17,11 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import Layout from '../../../shared/components/Layout';
 import { ROUTES } from '../../../constants/routes';
+import { useNotification } from '../../../shared/context/NotificationContext';
 
 function ClientMaintenancePage() {
   const history = useHistory();
+  const notification = useNotification();
   const { id } = useParams();
   const isEdit = Boolean(id);
 
@@ -85,9 +87,14 @@ function ClientMaintenancePage() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    console.log('Saving client data:', formData);
-    // Logic for Create/Update API call
-    history.push(ROUTES.CLIENTS);
+    try {
+      console.log('Saving client data:', formData);
+      // Logic for Create/Update API call
+      notification.success('El proceso se realizó correctamente.');
+      history.push(ROUTES.CLIENTS);
+    } catch (err) {
+      notification.error('Hubo un inconveniente con la transacción.');
+    }
   };
 
   return (

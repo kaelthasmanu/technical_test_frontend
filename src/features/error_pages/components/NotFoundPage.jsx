@@ -5,7 +5,7 @@ import Layout from '../../../shared/components/Layout';
 
 function NotFoundPage() {
   return (
-    <Layout>
+    <Layout houseItem>
       <Box
         sx={{
           display: 'flex',

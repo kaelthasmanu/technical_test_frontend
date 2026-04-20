@@ -12,7 +12,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  InputAdornment,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -23,11 +22,13 @@ import { useHistory } from 'react-router-dom';
 
 import Layout from '../../../shared/components/Layout';
 import { ROUTES } from '../../../constants/routes';
+import { useNotification } from '../../../shared/context/NotificationContext';
 
 import DeleteConfirmDialog from './DeleteConfirmDialog';
 
 function ClientsPage() {
   const history = useHistory();
+  const notification = useNotification();
 
   // State for search filters
   const [filters, setFilters] = useState({ nombre: '', identificacion: '' });
@@ -46,8 +47,12 @@ function ClientsPage() {
   ]);
 
   const handleSearch = () => {
-    console.log('Searching with filters:', filters);
-    // Logic for API search would go here
+    try {
+      console.log('Searching with filters:', filters);
+      // Logic for API search would go here
+    } catch (err) {
+      notification.error('Hubo un inconveniente con la transacción.');
+    }
   };
 
   const handleEdit = (id) => {
@@ -60,9 +65,14 @@ function ClientsPage() {
   };
 
   const confirmDelete = () => {
-    console.log('Deleting client with ID:', deleteId);
-    setClients(clients.filter(c => c.id !== deleteId));
-    setDeleteId(null);
+    try {
+      console.log('Deleting client with ID:', deleteId);
+      setClients(clients.filter(c => c.id !== deleteId));
+      setDeleteId(null);
+      notification.success('El proceso se realizó correctamente.');
+    } catch (err) {
+      notification.error('Hubo un inconveniente con la transacción.');
+    }
   };
 
   return (

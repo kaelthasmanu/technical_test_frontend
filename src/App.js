@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import theme from './shared/theme/theme';
 import { AuthProvider } from './features/auth';
+import { NotificationProvider } from './shared/context/NotificationContext';
 import AppRouter from './router/AppRouter';
 
 function App() {
@@ -12,9 +13,11 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <AuthProvider>
-          <AppRouter />
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <AppRouter />
+          </AuthProvider>
+        </NotificationProvider>
       </BrowserRouter>
     </ThemeProvider>
   );
