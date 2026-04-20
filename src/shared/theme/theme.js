@@ -1,10 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 
-/**
- * Material 3 inspired theme configuration.
- * Adhering to M3 principles: Dynamic color (simulated via executive navy),
- * refined typography, and purposeful motion/elevation.
- */
 const theme = createTheme({
   palette: {
     mode: 'light',
