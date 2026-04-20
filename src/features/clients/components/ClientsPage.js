@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react'
 import {
   Box,
   Paper,
@@ -24,17 +24,46 @@ import { useHistory } from 'react-router-dom';
 import Layout from '../../../shared/components/Layout';
 import { ROUTES } from '../../../constants/routes';
 
+import DeleteConfirmDialog from './DeleteConfirmDialog';
+
 function ClientsPage() {
   const history = useHistory();
 
+  // State for search filters
+  const [filters, setFilters] = useState({ nombre: '', identificacion: '' });
+  
+  // State for delete modal
+  const [deleteId, setDeleteId] = useState(null);
+  const [clientToDelete, setClientToDelete] = useState('');
+
   // Mock data for visual matching based on the image
-  const clients = [
+  const [clients, setClients] = useState([
     { id: '1', identificacion: '504440333', nombre: 'Allen Rivel Villalobos' },
     { id: '2', identificacion: '503330333', nombre: 'Jose Rivel Villa' },
     { id: '3', identificacion: '503330333', nombre: 'Luis Corrales Espinoza' },
     { id: '4', identificacion: '501110111', nombre: 'Test Test Test' },
     { id: '5', identificacion: '111111111', nombre: 'Virtual Virtual Virtual' },
-  ];
+  ]);
+
+  const handleSearch = () => {
+    console.log('Searching with filters:', filters);
+    // Logic for API search would go here
+  };
+
+  const handleEdit = (id) => {
+    history.push(`${ROUTES.CLIENT_MAINTENANCE}/${id}`);
+  };
+
+  const handleDeleteClick = (client) => {
+    setDeleteId(client.id);
+    setClientToDelete(client.nombre);
+  };
+
+  const confirmDelete = () => {
+    console.log('Deleting client with ID:', deleteId);
+    setClients(clients.filter(c => c.id !== deleteId));
+    setDeleteId(null);
+  };
 
   return (
     <Layout>
@@ -103,14 +132,19 @@ function ClientsPage() {
               variant="outlined"
               size="small"
               sx={{ flexGrow: 1 }}
+              value={filters.nombre}
+              onChange={(e) => setFilters({ ...filters, nombre: e.target.value })}
             />
             <TextField
               label="Identificación"
               variant="outlined"
               size="small"
               sx={{ flexGrow: 1 }}
+              value={filters.identificacion}
+              onChange={(e) => setFilters({ ...filters, identificacion: e.target.value })}
             />
             <IconButton
+              onClick={handleSearch}
               sx={{
                 border: '1px solid #b0bec5',
                 borderRadius: '50%',
@@ -137,10 +171,10 @@ function ClientsPage() {
                     <TableCell sx={{ color: '#78909c', py: 2 }}>{client.identificacion}</TableCell>
                     <TableCell sx={{ color: '#78909c', py: 2 }}>{client.nombre}</TableCell>
                     <TableCell align="right" sx={{ py: 1, pr: 2 }}>
-                      <IconButton size="small" sx={{ mr: 1 }}>
+                      <IconButton size="small" sx={{ mr: 1 }} onClick={() => handleEdit(client.id)}>
                         <EditIcon sx={{ fontSize: 20, color: '#546e7a' }} />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => handleDeleteClick(client)}>
                         <DeleteIcon sx={{ fontSize: 20, color: '#546e7a' }} />
                       </IconButton>
                     </TableCell>
@@ -151,6 +185,14 @@ function ClientsPage() {
           </TableContainer>
         </Box>
       </Paper>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmDialog 
+        open={Boolean(deleteId)}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        itemName={clientToDelete}
+      />
     </Layout>
   );
 }
