@@ -137,7 +137,7 @@ function Layout({ children, houseItem = false }) {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', overflowX: 'hidden', maxWidth: '100vw' }}>
       <CssBaseline />
 
       {/* ── Top AppBar ─────────────────────────────────────────── */}
@@ -250,10 +250,12 @@ function Layout({ children, houseItem = false }) {
         sx={{
           flexGrow: 1,
           p: { xs: 2, sm: 3 },
-          width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
+          width: { xs: '100%', lg: `calc(100% - ${DRAWER_WIDTH}px)` },
+          minWidth: 0,
           minHeight: '100vh',
           mt: { xs: '48px', sm: '64px' },
           bgcolor: 'background.default',
+          overflowX: 'hidden',
         }}
       >
         {children}

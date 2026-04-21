@@ -32,6 +32,7 @@ function ActionMenu({ client, onDetail, onEdit, onDelete }) {
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
@@ -56,7 +57,14 @@ function ActionMenu({ client, onDetail, onEdit, onDelete }) {
         <IconButton onClick={handleClick}>
           <MoreVertIcon sx={{ color: '#546e7a' }} />
         </IconButton>
-        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          disableScrollLock={true}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
           <MenuItem
             onClick={() => {
               handleClose();
@@ -215,7 +223,17 @@ function ClientsPage() {
           </Box>
 
           {/* Table Section */}
-          <TableContainer component={Box} sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflowX: 'auto' }}>
+          <TableContainer 
+            component={Box} 
+            sx={{ 
+              border: '1px solid #e0e0e0', 
+              borderRadius: 1, 
+              overflowX: 'auto',
+              maxWidth: '100%',
+              '&::-webkit-scrollbar': { height: 6 },
+              '&::-webkit-scrollbar-thumb': { bgcolor: '#cfd8dc', borderRadius: 3 }
+            }}
+          >
             <Table size="small" sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow sx={{ bgcolor: '#2979ff' }}>
