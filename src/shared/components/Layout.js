@@ -16,7 +16,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useHistory } from 'react-router-dom';
 
-import { useAuth } from '../../features/auth/context/AuthContext';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
 
 const DRAWER_WIDTH = 250;

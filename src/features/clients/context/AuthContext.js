@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
 // ── State shape ─────────────────────────────────────────────────────────────
 const initialState = {
@@ -81,12 +81,13 @@ export function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export const useAuth = () => {
-  const context = React.useContext(AuthContext);
+// ── Hook ──────────────────────────────────────────────────────────────────────
+export function useAuth() {
+  const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
+}
 
 export default AuthContext;
