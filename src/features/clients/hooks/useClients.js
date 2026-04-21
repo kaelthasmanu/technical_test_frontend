@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import { useNotification } from '../../../shared/context/NotificationContext';
+import { useAuth } from '../../auth/hooks/useAuth';
+import * as clientsService from '../services/clientsService';
 
 export const useClients = () => {
   const history = useHistory();
   const notification = useNotification();
+  const { userId } = useAuth();
 
   // State for search filters
   const [filters, setFilters] = useState({ nombre: '', identificacion: '' });
@@ -14,21 +17,21 @@ export const useClients = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [clientToDelete, setClientToDelete] = useState('');
 
-  // Mock data for visual matching based on the image
-  const [clients, setClients] = useState([
-    { id: '1', identificacion: '504440333', nombre: 'Allen Rivel Villalobos' },
-    { id: '2', identificacion: '503330333', nombre: 'Jose Rivel Villa' },
-    { id: '3', identificacion: '503330333', nombre: 'Luis Corrales Espinoza' },
-    { id: '4', identificacion: '501110111', nombre: 'Test Test Test' },
-    { id: '5', identificacion: '111111111', nombre: 'Virtual Virtual Virtual' },
-  ]);
+  const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
+    setLoading(true);
     try {
-      console.log('Searching with filters:', filters);
-      // Logic for API search would go here
+      const results = await clientsService.getClients({
+        ...filters,
+        usuarioId: userId
+      });
+      setClients(results);
     } catch (err) {
       notification.error('Hubo un inconveniente con la transacción.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,9 +52,9 @@ export const useClients = () => {
     setClientToDelete(client.nombre);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     try {
-      console.log('Deleting client with ID:', deleteId);
+      await clientsService.deleteClient(deleteId);
       setClients(clients.filter(c => c.id !== deleteId));
       setDeleteId(null);
       notification.success('El proceso se realizó correctamente.');
@@ -71,6 +74,7 @@ export const useClients = () => {
     setFilters,
     deleteId,
     clientToDelete,
+    loading,
     handleSearch,
     handleEdit,
     handleAdd,

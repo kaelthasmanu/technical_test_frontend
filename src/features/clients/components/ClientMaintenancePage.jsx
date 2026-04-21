@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   Paper,
@@ -9,96 +9,35 @@ import {
   MenuItem,
   Avatar,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import { useHistory, useParams } from 'react-router-dom';
 
 import Layout from '../../../shared/components/Layout';
-import { ROUTES } from '../../../constants/routes';
-import { useNotification } from '../../../shared/context/NotificationContext';
+import { useClientMaintenance } from '../hooks/useClientMaintenance';
 
 function ClientMaintenancePage() {
-  const history = useHistory();
-  const notification = useNotification();
-  const { id } = useParams();
-  const isEdit = Boolean(id);
-
-  // Form State
-  const [formData, setFormData] = useState({
-    nombre: '',
-    apellidos: '',
-    identificacion: '',
-    telefonoCelular: '',
-    otroTelefono: '',
-    direccion: '',
-    fNacimiento: '',
-    fAfiliacion: '',
-    sexo: '',
-    resenaPersonal: '',
-    imagen: '', // base64
-    interesesId: '',
-  });
-
-  // Mock interests (would come from API)
-  const interests = [
-    { id: '1', descripcion: 'Deportes' },
-    { id: '2', descripcion: 'Tecnología' },
-    { id: '3', descripcion: 'Música' },
-  ];
-
-  useEffect(() => {
-    if (isEdit) {
-      console.log('Loading client data for ID:', id);
-      // Mock loading data
-      setFormData({
-        nombre: 'Allen Rivel',
-        apellidos: 'Villalobos',
-        identificacion: '504440333',
-        telefonoCelular: '88888888',
-        otroTelefono: '22222222',
-        direccion: 'San José, Costa Rica',
-        fNacimiento: '1990-01-01',
-        fAfiliacion: '2022-04-26',
-        sexo: 'M',
-        resenaPersonal: 'Cliente preferencial',
-        imagen: '',
-        interesesId: '1',
-      });
-    }
-  }, [id, isEdit]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, imagen: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    try {
-      console.log('Saving client data:', formData);
-      // Logic for Create/Update API call
-      notification.success('El proceso se realizó correctamente.');
-      history.push(ROUTES.CLIENTS);
-    } catch (err) {
-      notification.error('Hubo un inconveniente con la transacción.');
-    }
-  };
+  const {
+    formData,
+    isEdit,
+    interests,
+    loading,
+    handleInputChange,
+    handleImageChange,
+    handleSave,
+    handleBack,
+  } = useClientMaintenance();
 
   return (
     <Layout>
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+          <CircularProgress />
+        </Box>
+      )}
+      {!loading && (
       <Paper elevation={1} sx={{ p: 4, borderRadius: 2 }}>
         {/* Header Section */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
@@ -166,7 +105,7 @@ function ClientMaintenancePage() {
                 boxShadow: 'none',
                 '&:hover': { bgcolor: '#cfd8dc', boxShadow: 'none' },
               }}
-              onClick={() => history.push(ROUTES.CLIENTS)}
+              onClick={handleBack}
             >
               Regresar
             </Button>
@@ -311,6 +250,7 @@ function ClientMaintenancePage() {
           </Grid>
         </Grid>
       </Paper>
+      )}
     </Layout>
   );
 }
