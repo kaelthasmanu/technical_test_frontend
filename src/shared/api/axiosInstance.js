@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from './endpoints';
+import { ENDPOINTS } from './endpoints';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -25,7 +26,10 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const requestUrl = error.config?.url || '';
+    const isLoginRequest = requestUrl.includes(ENDPOINTS.LOGIN);
+
+    if (error.response?.status === 401 && !isLoginRequest) {
       sessionStorage.clear();
       window.location.href = '/login';
     }
