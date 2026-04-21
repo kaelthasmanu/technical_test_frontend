@@ -21,29 +21,23 @@ export const clientSchema = z.object({
     .max(200, 'Máximo 200 caracteres'),
   fNacimiento: z.string()
     .min(1, 'La fecha de nacimiento es obligatoria')
-    .refine((date) => {
-      const selectedDate = new Date(date);
-      const today = new Date();
-      return selectedDate <= today;
-    }, 'La fecha de nacimiento no puede ser futura')
-    .refine((date) => {
-      const selectedDate = new Date(date);
-      const minDate = new Date('1900-01-01');
-      return selectedDate >= minDate;
-    }, 'Fecha de nacimiento no válida'),
+    .refine((val) => {
+      if (!val) return true;
+      const date = new Date(val);
+      return date <= new Date();
+    }, 'La fecha de nacimiento no puede ser futura'),
   fAfiliacion: z.string()
     .min(1, 'La fecha de afiliación es obligatoria')
-    .refine((date) => {
-      const selectedDate = new Date(date);
-      const today = new Date();
-      return selectedDate <= today;
+    .refine((val) => {
+      if (!val) return true;
+      const date = new Date(val);
+      return date <= new Date();
     }, 'La fecha de afiliación no puede ser futura'),
-}).refine((data) => {
-  const birthDate = new Date(data.fNacimiento);
-  const hireDate = new Date(data.fAfiliacion);
-  return hireDate >= birthDate;
-}, {
-  message: "La fecha de afiliación no puede ser anterior a la de nacimiento",
-  path: ["fAfiliacion"],
+  sexo: z.string().min(1, 'El género es obligatorio'),
+  resennaPersonal: z.string()
+    .max(200, 'Máximo 200 caracteres')
+    .optional()
+    .nullable(),
+  imagen: z.string().optional().nullable(),
+  interesFK: z.string().min(1, 'Debe seleccionar un interés'),
 });
-
