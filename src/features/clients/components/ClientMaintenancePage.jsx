@@ -21,7 +21,6 @@ import { useClientMaintenance } from '../hooks/useClientMaintenance';
 function ClientMaintenancePage() {
   const {
     formData,
-    isEdit,
     interests,
     loading,
     errors,
