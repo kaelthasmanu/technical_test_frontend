@@ -34,7 +34,7 @@ const theme = createTheme({
     labelLarge: { fontSize: '0.875rem', fontWeight: 500 },              // M3 Label Large
   },
   shape: {
-    borderRadius: 12, // M3 utilizes larger border radius for components
+    borderRadius: 6, // M3 utilizes larger border radius for components
   },
   shadows: [
     'none',
@@ -48,7 +48,6 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 20, // M3 Buttons are more rounded
           textTransform: 'none', // M3 prefers sentence case for readability
           padding: '10px 24px',
           fontWeight: 500,
@@ -59,7 +58,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none', // Clear default overlays
-          borderRadius: 6,        // M3 Card/Paper radius
         },
       },
     },

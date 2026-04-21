@@ -130,7 +130,7 @@ function ClientsPage() {
 
   return (
     <Layout>
-      <Paper elevation={1} sx={{ p: 0, borderRadius: 2, overflow: 'hidden' }}>
+      <Paper elevation={1} sx={{ p: 0, borderRadius: 1, overflow: 'hidden' }}>
         {/* Header Section */}
         <Box
           sx={{
@@ -140,6 +140,7 @@ function ClientsPage() {
             justifyContent: 'space-between',
             alignItems: { xs: 'flex-start', sm: 'center' },
             gap: 2,
+            borderBottom: '1px solid #e0e0e0',
           }}
         >
           <Typography
@@ -189,10 +190,7 @@ function ClientsPage() {
           {/* Search Section */}
           <Box
             sx={{
-              p: { xs: 2, sm: 3 },
-              mb: 3,
-              border: '1px solid #e0e0e0',
-              borderRadius: 1,
+              my: 3,
               display: 'flex',
               flexDirection: { xs: 'column', md: 'row' },
               alignItems: { xs: 'stretch', md: 'center' },

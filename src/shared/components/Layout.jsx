@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   AppBar,
   Box,
@@ -17,7 +16,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useHistory } from 'react-router-dom';
 
-import { useAuth } from '../../features/auth/context/AuthContext';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
 
 const DRAWER_WIDTH = 250;
@@ -105,30 +104,15 @@ function DrawerContent({ username, onNavigate, items = NAV_ITEMS }) {
   );
 }
 
-DrawerContent.propTypes = {
-  username: PropTypes.string,
-  onNavigate: PropTypes.func.isRequired,
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      abbr: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
-      path: PropTypes.string.isRequired,
-    })
-  ),
-};
-
-function Layout({ children, houseItem = false }) {
+function Layout({ children, houseItem = true }) {
   const { username: authUsername, logout } = useAuth();
   const history = useHistory();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const username = authUsername;
 
-  // If houseItem is true, include Home in navigation items
-  const menuItems = houseItem 
-    ? [...NAV_ITEMS] 
-    : NAV_ITEMS.filter(item => item.path !== ROUTES.HOME);
+  // Always show both INICIO and Consulta Clientes as per requirement
+  const menuItems = NAV_ITEMS;
 
   const handleToggle = () => setMobileOpen((prev) => !prev);
 
@@ -145,13 +129,13 @@ function Layout({ children, houseItem = false }) {
   const drawerSx = {
     width: DRAWER_WIDTH,
     boxSizing: 'border-box',
-    bgcolor: '#f0f2f5', // Lighter grey for the drawer background as seen in images
+    bgcolor: '#f4f7f9', // Updated to match DrawerContent bgcolor
     color: 'text.primary',
     borderRight: '1px solid rgba(0,0,0,0.12)',
   };
 
   return (
-    <Box sx={{ display: 'flex', overflowX: 'hidden', maxWidth: '100vw' }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
 
       {/* ── Top AppBar ─────────────────────────────────────────── */}
@@ -164,124 +148,98 @@ function Layout({ children, houseItem = false }) {
           borderBottom: '3px solid #00a0e9', // Brighter blue accent line
         }}
       >
-        <Toolbar variant="dense" sx={{ minHeight: 48, px: { xs: 1, sm: 2 } }}>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={handleToggle}
-            sx={{ mr: { xs: 0.5, sm: 1 } }}
-          >
-            <MenuIcon sx={{ fontSize: 20 }} />
-          </IconButton>
-          <Typography
-            variant="caption"
-            noWrap
-            fontWeight={600}
-            sx={{
-              flexGrow: 1,
-              letterSpacing: '0.05em',
-              color: '#fff',
-              fontSize: { xs: '0.7rem', sm: '0.8rem' },
-            }}
-          >
-            COMPANIA PRUEBA
-          </Typography>
-          <Typography
-            variant="body2"
-            noWrap
-            sx={{
-              mr: { xs: 1, sm: 2 },
-              color: '#fff',
-              fontSize: { xs: '0.75rem', sm: '0.85rem' },
-              maxWidth: { xs: '80px', sm: 'none' },
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {username || 'Nombre de Usuario'}
-          </Typography>
-          <Box
-            onClick={handleLogout}
-            sx={{
-              bgcolor: '#fff',
-              color: '#001529',
-              width: { xs: 28, sm: 32 },
-              height: { xs: 28, sm: 32 },
-              borderRadius: 1.5,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease-in-out',
-              flexShrink: 0,
-              '&:hover': {
-                bgcolor: 'rgba(255,255,255,0.92)',
-                transform: 'scale(1.05)',
-              },
-            }}
-          >
-            <ExitToAppIcon sx={{ fontSize: { xs: 16, sm: 18 } }} />
-          </Box>
-        </Toolbar>
-      </AppBar>
-
-      {/* ── Side Drawer ─────────────────────────────────────────── */}
-      <Box
-        component="nav"
-        sx={{ width: { lg: DRAWER_WIDTH }, flexShrink: { lg: 0 } }}
-      >
-        {/* Mobile: temporary */}
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleToggle}
-          ModalProps={{ keepMounted: true }}
+      <Toolbar variant="dense" sx={{ minHeight: 64 }}>
+        <IconButton color="inherit" edge="start" onClick={handleToggle} sx={{ mr: 1 }}>
+          <MenuIcon sx={{ fontSize: 24 }} />
+        </IconButton>
+        <Typography
+          variant="h6"
+          noWrap
+          fontWeight={700}
+          sx={{ flexGrow: 1, letterSpacing: '0.02em', color: '#fff', fontSize: '1.2rem' }}
+        >
+          COMPANIA PRUEBA
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{ mr: 2, color: '#fff', fontSize: '1rem', fontWeight: 500 }}
+        >
+          {username || 'Nombre de Usuario'}
+        </Typography>
+        <Box
+          onClick={handleLogout}
           sx={{
-            display: { xs: 'block', lg: 'none' },
-            '& .MuiDrawer-paper': { ...drawerSx, mt: { xs: '48px', sm: '64px' } },
+            bgcolor: '#fff',
+            color: '#001529',
+            width: 38,
+            height: 38,
+            borderRadius: 1, 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': { 
+              bgcolor: 'rgba(255,255,255,0.92)',
+              transform: 'scale(1.05)'
+            },
           }}
         >
-          <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
-        </Drawer>
+          <ExitToAppIcon sx={{ fontSize: 22 }} />
+        </Box>
+      </Toolbar>
+    </AppBar>
 
-        {/* Desktop: permanent */}
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', lg: 'block' },
-            '& .MuiDrawer-paper': drawerSx,
-          }}
-          open
-        >
-          <Toolbar variant="dense" /> {/* spacer for AppBar height */}
-          <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
-        </Drawer>
-      </Box>
-
-      {/* ── Main content ────────────────────────────────────────── */}
-      <Box
-        component="main"
+    {/* ── Side Drawer ─────────────────────────────────────────── */}
+    <Box
+      component="nav"
+      sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
+    >
+      {/* Mobile: temporary */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleToggle}
+        ModalProps={{ keepMounted: true }}
         sx={{
-          flexGrow: 1,
-          p: { xs: 2, sm: 3 },
-          width: { xs: '100%', lg: `calc(100% - ${DRAWER_WIDTH}px)` },
-          minWidth: 0,
-          minHeight: '100vh',
-          mt: { xs: '48px', sm: '64px' },
-          bgcolor: 'background.default',
-          overflowX: 'hidden',
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { ...drawerSx },
         }}
       >
-        {children}
-      </Box>
+        <Toolbar sx={{ minHeight: '64px !important' }} />
+        <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
+      </Drawer>
+
+      {/* Desktop: permanent */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          '& .MuiDrawer-paper': drawerSx,
+        }}
+        open
+      >
+        <Toolbar sx={{ minHeight: '64px !important' }} /> {/* Fixed spacer to prevent overlap */}
+        <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
+      </Drawer>
     </Box>
 
+    {/* ── Main content ────────────────────────────────────────── */}
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        p: 3,
+        width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
+        minHeight: '100vh',
+        mt: '64px',
+        bgcolor: '#fff',
+      }}
+    >
+      {children}
+    </Box>
+    </Box>
   );
 }
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-  houseItem: PropTypes.bool,
-};
 
 export default Layout;
