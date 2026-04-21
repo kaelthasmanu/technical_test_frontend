@@ -105,11 +105,11 @@ function DrawerContent({ username, onNavigate, items = NAV_ITEMS }) {
 }
 
 function Layout({ children, houseItem = false }) {
-  const { authState, logout } = useAuth();
+  const { username: authUsername, logout } = useAuth();
   const history = useHistory();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const username = authState?.user?.nombre;
+  const username = authUsername;
 
   // If houseItem is true, include Home in navigation items
   const menuItems = houseItem 

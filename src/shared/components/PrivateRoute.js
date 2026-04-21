@@ -4,13 +4,13 @@ import { useAuth } from '../../features/auth/context/AuthContext';
 import { ROUTES } from '../../constants/routes';
 
 function PrivateRoute({ component: Component, ...rest }) {
-  const { authState } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        authState?.isAuthenticated ? (
+        isAuthenticated ? (
           <Component {...props} />
         ) : (
           <Redirect to={{ pathname: ROUTES.LOGIN, state: { from: props.location } }} />

@@ -33,7 +33,7 @@ function authReducer(state, action) {
 }
 
 // ── Context ───────────────────────────────────────────────────────────────────
-const AuthContext = createContext(undefined);
+export const AuthContext = createContext(undefined);
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 export function AuthProvider({ children }) {
