@@ -23,6 +23,21 @@ export const useClients = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const applyFilters = useCallback((clientsList, { nombre, identificacion }) => {
+    const normalizedName = nombre.trim().toLowerCase();
+    const normalizedId = identificacion.trim().toLowerCase();
+
+    return clientsList.filter((client) => {
+      const clientName = `${client.nombre || ''} ${client.apellidos || ''}`.trim().toLowerCase();
+      const clientId = String(client.identificacion || '').trim().toLowerCase();
+
+      const matchesName = !normalizedName || clientName.includes(normalizedName);
+      const matchesId = !normalizedId || clientId.includes(normalizedId);
+
+      return matchesName && matchesId;
+    });
+  }, []);
+
   const handleSearch = useCallback(async () => {
     setLoading(true);
     try {
@@ -30,13 +45,13 @@ export const useClients = () => {
         ...filters,
         usuarioId: userId
       });
-      setClients(results);
+      setClients(applyFilters(results, filters));
     } catch (err) {
       notification.error('Hubo un inconveniente con la transacción.');
     } finally {
       setLoading(false);
     }
-  }, [filters, userId, notification]);
+  }, [filters, userId, notification, applyFilters]);
 
   useEffect(() => {
     handleSearch();
