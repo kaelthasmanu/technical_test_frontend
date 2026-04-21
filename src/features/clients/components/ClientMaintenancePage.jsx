@@ -24,9 +24,11 @@ function ClientMaintenancePage() {
     isEdit,
     interests,
     loading,
-    handleInputChange,
+    errors,
+    isValid,
+    register,
+    handleSubmit,
     handleImageChange,
-    handleSave,
     handleBack,
   } = useClientMaintenance();
 
@@ -90,7 +92,8 @@ function ClientMaintenancePage() {
                 boxShadow: 'none',
                 '&:hover': { bgcolor: '#cfd8dc', boxShadow: 'none' },
               }}
-              onClick={handleSave}
+              onClick={handleSubmit}
+              disabled={!isValid}
             >
               Guardar
             </Button>
@@ -113,15 +116,16 @@ function ClientMaintenancePage() {
         </Box>
 
         {/* Form Grid */}
+        <form onSubmit={handleSubmit} noValidate>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
             <TextField
               required
               fullWidth
               label="Identificación"
-              name="identificacion"
-              value={formData.identificacion}
-              onChange={handleInputChange}
+              {...register('identificacion')}
+              error={!!errors.identificacion}
+              helperText={errors.identificacion?.message}
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -129,9 +133,9 @@ function ClientMaintenancePage() {
               required
               fullWidth
               label="Nombre"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleInputChange}
+              {...register('nombre')}
+              error={!!errors.nombre}
+              helperText={errors.nombre?.message}
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -139,9 +143,9 @@ function ClientMaintenancePage() {
               required
               fullWidth
               label="Apellidos"
-              name="apellidos"
-              value={formData.apellidos}
-              onChange={handleInputChange}
+              {...register('apellidos')}
+              error={!!errors.apellidos}
+              helperText={errors.apellidos?.message}
             />
           </Grid>
 
@@ -151,9 +155,10 @@ function ClientMaintenancePage() {
               fullWidth
               select
               label="Género"
-              name="sexo"
-              value={formData.sexo}
-              onChange={handleInputChange}
+              {...register('sexo')}
+              error={!!errors.sexo}
+              helperText={errors.sexo?.message}
+              value={formData.sexo || ''}
             >
               <MenuItem value="F">Femenino</MenuItem>
               <MenuItem value="M">Masculino</MenuItem>
@@ -164,11 +169,11 @@ function ClientMaintenancePage() {
               required
               fullWidth
               label="Fecha de nacimiento"
-              name="fNacimiento"
               type="date"
               InputLabelProps={{ shrink: true }}
-              value={formData.fNacimiento}
-              onChange={handleInputChange}
+              {...register('fNacimiento')}
+              error={!!errors.fNacimiento}
+              helperText={errors.fNacimiento?.message}
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -176,11 +181,11 @@ function ClientMaintenancePage() {
               required
               fullWidth
               label="Fecha de afiliación"
-              name="fAfiliacion"
               type="date"
               InputLabelProps={{ shrink: true }}
-              value={formData.fAfiliacion}
-              onChange={handleInputChange}
+              {...register('fAfiliacion')}
+              error={!!errors.fAfiliacion}
+              helperText={errors.fAfiliacion?.message}
             />
           </Grid>
 
@@ -189,9 +194,9 @@ function ClientMaintenancePage() {
               required
               fullWidth
               label="Teléfono Celular"
-              name="telefonoCelular"
-              value={formData.telefonoCelular}
-              onChange={handleInputChange}
+              {...register('celular')}
+              error={!!errors.celular}
+              helperText={errors.celular?.message}
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -199,9 +204,9 @@ function ClientMaintenancePage() {
               required
               fullWidth
               label="Teléfono Otro"
-              name="otroTelefono"
-              value={formData.otroTelefono}
-              onChange={handleInputChange}
+              {...register('otroTelefono')}
+              error={!!errors.otroTelefono}
+              helperText={errors.otroTelefono?.message}
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -210,9 +215,10 @@ function ClientMaintenancePage() {
               fullWidth
               select
               label="Interés"
-              name="interesesId"
-              value={formData.interesesId}
-              onChange={handleInputChange}
+              {...register('interesFK')}
+              error={!!errors.interesFK}
+              helperText={errors.interesFK?.message}
+              value={formData.interesFK || ''}
             >
               <MenuItem value="">Seleccione</MenuItem>
               {interests.map((option) => (
@@ -228,11 +234,11 @@ function ClientMaintenancePage() {
               required
               fullWidth
               label="Dirección"
-              name="direccion"
               multiline
               rows={2}
-              value={formData.direccion}
-              onChange={handleInputChange}
+              {...register('direccion')}
+              error={!!errors.direccion}
+              helperText={errors.direccion?.message}
             />
           </Grid>
 
@@ -241,14 +247,15 @@ function ClientMaintenancePage() {
               required
               fullWidth
               label="Reseña"
-              name="resenaPersonal"
               multiline
               rows={2}
-              value={formData.resenaPersonal}
-              onChange={handleInputChange}
+              {...register('resennaPersonal')}
+              error={!!errors.resennaPersonal}
+              helperText={errors.resennaPersonal?.message}
             />
           </Grid>
         </Grid>
+        </form>
       </Paper>
       )}
     </Layout>

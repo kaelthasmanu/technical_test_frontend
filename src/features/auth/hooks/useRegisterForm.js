@@ -21,7 +21,9 @@ export function useRegisterForm() {
 
     try {
       await axiosInstance.post(ENDPOINTS.REGISTER, data);
-      history.push('/login');
+      history.push('/login', {
+        successMessage: 'Registro completado correctamente. Ya puede iniciar sesión.'
+      });
     } catch (err) {
       setSubmitError(err.response?.data?.message || 'Error al registrar');
     }

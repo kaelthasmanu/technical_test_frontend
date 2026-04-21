@@ -21,9 +21,10 @@ const LoginPage = () => {
     onSubmit,
     error,
     loading,
+    successMessage,
     rememberMe,
     setRememberMe,
-    formState: { errors, isValid }
+    formState: { errors }
   } = useLoginForm();
 
   return (
@@ -32,6 +33,12 @@ const LoginPage = () => {
         <Typography variant="h5" align="center" gutterBottom fontWeight="medium">
           Iniciar Sesión
         </Typography>
+
+        {successMessage && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {successMessage}
+          </Alert>
+        )}
 
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -80,25 +87,42 @@ const LoginPage = () => {
             type="submit"
             fullWidth
             variant="contained"
-            disabled={loading || !isValid}
             sx={{
               py: 1.2,
               textTransform: 'none',
               fontWeight: 600,
-              bgcolor: '#1F86AD',
-              mb: 2
+              bgcolor: '#2979FF',
+              borderRadius: '4px',
+              mb: 2,
+              boxShadow: 'none',
+              '&:hover': {
+                bgcolor: '#1C7AA0',
+                boxShadow: 'none'
+              }
             }}
           >
             {loading ? 'Iniciando...' : 'INICIAR SESIÓN'}
           </Button>
 
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              ¿No tiene una cuenta?{' '}
-              <Link component={RouterLink} to="/registro" underline="hover">
-                Regístrese
-              </Link>
+          <Box sx={{ textAlign: 'left' }}>
+            <Typography
+              variant="body2"
+              sx={{ color: '#18439e', fontWeight: 500 }}
+            >
+              ¿No tiene una cuenta?
             </Typography>
+
+            <Link
+              component={RouterLink}
+              to="/register"
+              underline="hover"
+              sx={{
+                display: 'block',
+                color: '#18439e',
+              }}
+            >
+              Regístrese
+            </Link>
           </Box>
         </form>
       </Paper>

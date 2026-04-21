@@ -15,7 +15,7 @@ const RegistroPage = () => {
     handleSubmit,
     onSubmit,
     submitError,
-    formState: { errors, isSubmitting, isValid }
+    formState: { errors, isSubmitting }
   } = useRegisterForm();
 
   return (
@@ -68,13 +68,18 @@ const RegistroPage = () => {
             type="submit"
             fullWidth
             variant="contained"
-            disabled={!isValid || isSubmitting}
-            sx={{
+          sx={{
               py: 1.2,
               textTransform: 'none',
               fontWeight: 600,
-              bgcolor: '#1F86AD',
-              '&:disabled': { bgcolor: '#cccccc' }
+              bgcolor: '#2979FF',
+              borderRadius: '4px',
+              mb: 2,
+              boxShadow: 'none',
+              '&:hover': {
+                bgcolor: '#1C7AA0',
+                boxShadow: 'none'
+              }
             }}
           >
             {isSubmitting ? 'Registrando...' : 'REGISTRARME'}
