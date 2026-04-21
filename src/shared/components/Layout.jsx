@@ -104,15 +104,17 @@ function DrawerContent({ username, onNavigate, items = NAV_ITEMS }) {
   );
 }
 
-function Layout({ children, houseItem = true }) {
+function Layout({ children, houseItem = false }) {
   const { username: authUsername, logout } = useAuth();
   const history = useHistory();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const username = authUsername;
 
-  // Always show both INICIO and Consulta Clientes as per requirement
-  const menuItems = NAV_ITEMS;
+  // If houseItem is true, include Home in navigation items
+  const menuItems = houseItem 
+    ? [...NAV_ITEMS] 
+    : NAV_ITEMS.filter(item => item.path !== ROUTES.HOME);
 
   const handleToggle = () => setMobileOpen((prev) => !prev);
 
@@ -129,7 +131,7 @@ function Layout({ children, houseItem = true }) {
   const drawerSx = {
     width: DRAWER_WIDTH,
     boxSizing: 'border-box',
-    bgcolor: '#f4f7f9', // Updated to match DrawerContent bgcolor
+    bgcolor: '#f0f2f5', // Lighter grey for the drawer background as seen in images
     color: 'text.primary',
     borderRight: '1px solid rgba(0,0,0,0.12)',
   };
@@ -148,96 +150,95 @@ function Layout({ children, houseItem = true }) {
           borderBottom: '3px solid #00a0e9', // Brighter blue accent line
         }}
       >
-      <Toolbar variant="dense" sx={{ minHeight: 64 }}>
-        <IconButton color="inherit" edge="start" onClick={handleToggle} sx={{ mr: 1 }}>
-          <MenuIcon sx={{ fontSize: 24 }} />
-        </IconButton>
-        <Typography
-          variant="h6"
-          noWrap
-          fontWeight={700}
-          sx={{ flexGrow: 1, letterSpacing: '0.02em', color: '#fff', fontSize: '1.2rem' }}
-        >
-          COMPANIA PRUEBA
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ mr: 2, color: '#fff', fontSize: '1rem', fontWeight: 500 }}
-        >
-          {username || 'Nombre de Usuario'}
-        </Typography>
-        <Box
-          onClick={handleLogout}
+        <Toolbar variant="dense" sx={{ minHeight: 48 }}>
+          <IconButton color="inherit" edge="start" onClick={handleToggle} sx={{ mr: 1 }}>
+            <MenuIcon sx={{ fontSize: 20 }} />
+          </IconButton>
+          <Typography
+            variant="caption"
+            noWrap
+            fontWeight={600}
+            sx={{ flexGrow: 1, letterSpacing: '0.05em', color: '#fff', fontSize: '0.8rem' }}
+          >
+            COMPANIA PRUEBA
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ mr: 2, color: '#fff', fontSize: '0.85rem' }}
+          >
+            {username || 'Nombre de Usuario'}
+          </Typography>
+          <Box
+            onClick={handleLogout}
+            sx={{
+              bgcolor: '#fff',
+              color: '#001529',
+              width: 32,
+              height: 32,
+              borderRadius: 3, // M3 style: small containers use standard rounded corners (8-12px -> 3*8px)
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': { 
+                bgcolor: 'rgba(255,255,255,0.92)',
+                transform: 'scale(1.05)'
+              },
+            }}
+          >
+            <ExitToAppIcon sx={{ fontSize: 18 }} />
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* ── Side Drawer ─────────────────────────────────────────── */}
+      <Box
+        component="nav"
+        sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
+      >
+        {/* Mobile: temporary */}
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleToggle}
+          ModalProps={{ keepMounted: true }}
           sx={{
-            bgcolor: '#fff',
-            color: '#001529',
-            width: 38,
-            height: 38,
-            borderRadius: 1, 
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease-in-out',
-            '&:hover': { 
-              bgcolor: 'rgba(255,255,255,0.92)',
-              transform: 'scale(1.05)'
-            },
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': { ...drawerSx, mt: '64px' },
           }}
         >
-          <ExitToAppIcon sx={{ fontSize: 22 }} />
-        </Box>
-      </Toolbar>
-    </AppBar>
+          <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
+        </Drawer>
 
-    {/* ── Side Drawer ─────────────────────────────────────────── */}
-    <Box
-      component="nav"
-      sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
-    >
-      {/* Mobile: temporary */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={handleToggle}
-        ModalProps={{ keepMounted: true }}
+        {/* Desktop: permanent */}
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            '& .MuiDrawer-paper': drawerSx,
+          }}
+          open
+        >
+          <Toolbar /> {/* spacer for AppBar height */}
+          <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
+        </Drawer>
+      </Box>
+
+      {/* ── Main content ────────────────────────────────────────── */}
+      <Box
+        component="main"
         sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { ...drawerSx },
+          flexGrow: 1,
+          p: 3,
+          width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
+          minHeight: '100vh',
+          mt: '64px',
+          bgcolor: 'background.default',
         }}
       >
-        <Toolbar sx={{ minHeight: '64px !important' }} />
-        <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
-      </Drawer>
-
-      {/* Desktop: permanent */}
-      <Drawer
-        variant="permanent"
-        sx={{
-          display: { xs: 'none', md: 'block' },
-          '& .MuiDrawer-paper': drawerSx,
-        }}
-        open
-      >
-        <Toolbar sx={{ minHeight: '64px !important' }} /> {/* Fixed spacer to prevent overlap */}
-        <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
-      </Drawer>
-    </Box>
-
-    {/* ── Main content ────────────────────────────────────────── */}
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        p: 3,
-        width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
-        minHeight: '100vh',
-        mt: '64px',
-        bgcolor: '#fff',
-      }}
-    >
-      {children}
-    </Box>
+        {children}
+      </Box>
     </Box>
   );
 }
