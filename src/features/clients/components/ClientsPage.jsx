@@ -244,15 +244,12 @@ function ClientsPage() {
                       <TableCell sx={{ color: '#78909c', py: 2 }}>{client.identificacion}</TableCell>
                       <TableCell sx={{ color: '#78909c', py: 2 }}>{`${client.nombre} ${client.apellidos || ''}`}</TableCell>
                       <TableCell align="right" sx={{ py: 1, pr: 2 }}>
-                        <IconButton size="small" sx={{ mr: 1 }} onClick={() => handleDetailClick(client)}>
-                          <VisibilityIcon sx={{ fontSize: 20, color: '#546e7a' }} />
-                        </IconButton>
-                        <IconButton size="small" sx={{ mr: 1 }} onClick={() => handleEdit(client.id)}>
-                          <EditIcon sx={{ fontSize: 20, color: '#546e7a' }} />
-                        </IconButton>
-                        <IconButton size="small" onClick={() => handleDeleteClick(client)}>
-                          <DeleteIcon sx={{ fontSize: 20, color: '#546e7a' }} />
-                        </IconButton>
+                        <ActionMenu
+                          client={client}
+                          onDetail={handleDetailClick}
+                          onEdit={handleEdit}
+                          onDelete={handleDeleteClick}
+                        />
                       </TableCell>
                     </TableRow>
                   ))

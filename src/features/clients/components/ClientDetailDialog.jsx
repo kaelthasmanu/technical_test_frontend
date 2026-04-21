@@ -50,25 +50,25 @@ const ClientDetailDialog = ({ open, onClose, clientId }) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ bgcolor: '#eceff1', color: '#263238', fontWeight: 700 }}>
+      <DialogTitle sx={{ bgcolor: '#eceff1', color: '#263238', fontWeight: 700, p: { xs: 2, sm: 3 } }}>
         Detalles del Cliente
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ p: { xs: 2, sm: 3 } }}>
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
             <CircularProgress />
           </Box>
         ) : client ? (
-          <Grid container spacing={3}>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
             {/* Sidebar / Avatar */}
             <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Avatar
                 src={client.imagen}
-                sx={{ width: 150, height: 150, bgcolor: '#cfd8dc', mb: 2, boxShadow: 2 }}
+                sx={{ width: { xs: 120, sm: 150 }, height: { xs: 120, sm: 150 }, bgcolor: '#cfd8dc', mb: 2, boxShadow: 2 }}
               >
-                {!client.imagen && <PhotoCamera sx={{ fontSize: 60 }} />}
+                {!client.imagen && <PhotoCamera sx={{ fontSize: { xs: 40, sm: 60 } }} />}
               </Avatar>
-              <Typography variant="h6" align="center" sx={{ fontWeight: 700, color: '#263238' }}>
+              <Typography variant="h6" align="center" sx={{ fontWeight: 700, color: '#263238', fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                 {client.nombre} {client.apellidos}
               </Typography>
               <Typography variant="body2" color="textSecondary" align="center">
