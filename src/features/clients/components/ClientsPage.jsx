@@ -15,6 +15,7 @@ import {
   TableRow,
   Menu,
   MenuItem,
+  Divider,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -186,11 +187,12 @@ function ClientsPage() {
           </Box>
         </Box>
 
-        <Box sx={{ px: { xs: 2, sm: 3 }, pb: 4 }}>
+        <Box sx={{ px: { xs: 2, sm: 3 }, pb: 3 }}>
           {/* Search Section */}
           <Box
             sx={{
-              my: 3,
+              mt: 3,
+              mb: 0,
               display: 'flex',
               flexDirection: { xs: 'column', md: 'row' },
               alignItems: { xs: 'stretch', md: 'center' },
@@ -232,7 +234,11 @@ function ClientsPage() {
               Buscar
             </Button>
           </Box>
+        </Box>
 
+        <Divider />
+
+        <Box sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 4 }}>
           {/* Table Section */}
           <TableContainer 
             component={Box} 
