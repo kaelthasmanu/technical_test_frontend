@@ -8,8 +8,7 @@ import { ENDPOINTS } from '../../../shared/api/endpoints';
  */
 export const getClients = async (filters) => {
   const { data } = await axiosInstance.post(ENDPOINTS.CLIENTS_LIST, filters);
-  // Returns only the first 50 results to improve performance
-  return Array.isArray(data) ? data.slice(0, 50) : data;
+  return data;
 };
 
 /**
