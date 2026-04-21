@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   AppBar,
   Box,
@@ -103,6 +104,19 @@ function DrawerContent({ username, onNavigate, items = NAV_ITEMS }) {
     </Box>
   );
 }
+
+DrawerContent.propTypes = {
+  username: PropTypes.string,
+  onNavigate: PropTypes.func.isRequired,
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      abbr: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ),
+};
 
 function Layout({ children, houseItem = false }) {
   const { username: authUsername, logout } = useAuth();
@@ -264,5 +278,10 @@ function Layout({ children, houseItem = false }) {
 
   );
 }
+
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  houseItem: PropTypes.bool,
+};
 
 export default Layout;

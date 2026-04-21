@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Dialog,
   DialogTitle,
@@ -25,6 +26,11 @@ const DetailItem = ({ label, value }) => (
     </Typography>
   </Box>
 );
+
+DetailItem.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
 
 const ClientDetailDialog = ({ open, onClose, clientId }) => {
   const [client, setClient] = useState(null);
@@ -128,6 +134,12 @@ const ClientDetailDialog = ({ open, onClose, clientId }) => {
       </DialogActions>
     </Dialog>
   );
+};
+
+ClientDetailDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  clientId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default ClientDetailDialog;

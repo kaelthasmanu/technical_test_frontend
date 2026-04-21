@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Dialog,
   DialogTitle,
@@ -38,5 +39,12 @@ function DeleteConfirmDialog({ open, onClose, onConfirm, itemName }) {
     </Dialog>
   );
 }
+
+DeleteConfirmDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  itemName: PropTypes.string,
+};
 
 export default DeleteConfirmDialog;

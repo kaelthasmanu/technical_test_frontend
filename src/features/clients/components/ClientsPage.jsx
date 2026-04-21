@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types';
 import {
   Box,
   Paper,
@@ -94,6 +95,18 @@ function ActionMenu({ client, onDetail, onEdit, onDelete }) {
     </>
   );
 }
+
+ActionMenu.propTypes = {
+  client: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    identificacion: PropTypes.string,
+    nombre: PropTypes.string,
+    apellidos: PropTypes.string,
+  }).isRequired,
+  onDetail: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
 
 function ClientsPage() {
   const {
