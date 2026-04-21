@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import { useNotification } from '../../../shared/context/NotificationContext';
@@ -23,7 +23,7 @@ export const useClients = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     setLoading(true);
     try {
       const results = await clientsService.getClients({
@@ -36,7 +36,11 @@ export const useClients = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, userId, notification]);
+
+  useEffect(() => {
+    handleSearch();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = (id) => {
     history.push(`${ROUTES.CLIENT_MAINTENANCE}/${id}`);
