@@ -100,7 +100,7 @@ function DrawerContent({ username, onNavigate, items = NAV_ITEMS }) {
                 primary={item.label}
                 primaryTypographyProps={{ 
                   variant: 'body1', 
-                  fontWeight: isActive ? 700 : 500,
+                  fontWeight: 500,
                   color: isActive ? '#00b0ff' : '#546e7a',
                   fontSize: '1.1rem'
                 }}
