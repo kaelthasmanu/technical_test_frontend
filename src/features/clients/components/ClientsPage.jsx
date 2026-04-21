@@ -12,6 +12,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -19,10 +21,71 @@ import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Layout from '../../../shared/components/Layout';
 import { useClients } from '../hooks/useClients';
 import DeleteConfirmDialog from './DeleteConfirmDialog';
 import ClientDetailDialog from './ClientDetailDialog';
+
+function ActionMenu({ client, onDetail, onEdit, onDelete }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <Box sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+        <IconButton size="small" sx={{ mr: 1 }} onClick={() => onDetail(client)}>
+          <VisibilityIcon sx={{ fontSize: 20, color: '#546e7a' }} />
+        </IconButton>
+        <IconButton size="small" sx={{ mr: 1 }} onClick={() => onEdit(client.id)}>
+          <EditIcon sx={{ fontSize: 20, color: '#546e7a' }} />
+        </IconButton>
+        <IconButton size="small" onClick={() => onDelete(client)}>
+          <DeleteIcon sx={{ fontSize: 20, color: '#546e7a' }} />
+        </IconButton>
+      </Box>
+      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+        <IconButton onClick={handleClick}>
+          <MoreVertIcon sx={{ color: '#546e7a' }} />
+        </IconButton>
+        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              onDetail(client);
+            }}
+          >
+            <VisibilityIcon sx={{ fontSize: 20, color: '#546e7a', mr: 1 }} /> Ver Detalle
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              onEdit(client.id);
+            }}
+          >
+            <EditIcon sx={{ fontSize: 20, color: '#546e7a', mr: 1 }} /> Editar
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              onDelete(client);
+            }}
+          >
+            <DeleteIcon sx={{ fontSize: 20, color: '#546e7a', mr: 1 }} /> Eliminar
+          </MenuItem>
+        </Menu>
+      </Box>
+    </>
+  );
+}
 
 function ClientsPage() {
   const {
@@ -50,18 +113,25 @@ function ClientsPage() {
         {/* Header Section */}
         <Box
           sx={{
-            p: 3,
+            p: { xs: 2, sm: 3 },
             display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            gap: 2,
           }}
         >
-          <Typography variant="h5" fontWeight={700} sx={{ color: '#263238' }}>
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            sx={{ color: '#263238', fontSize: { xs: '1.2rem', sm: '1.5rem' } }}
+          >
             Consulta de clientes
           </Typography>
-          <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Box sx={{ display: 'flex', gap: 1.5, width: { xs: '100%', sm: 'auto' } }}>
             <Button
               variant="contained"
+              fullWidth={true}
               startIcon={<AddIcon />}
               sx={{
                 bgcolor: '#eceff1',
@@ -77,6 +147,7 @@ function ClientsPage() {
             </Button>
             <Button
               variant="contained"
+              fullWidth={true}
               startIcon={<ArrowBackIcon />}
               sx={{
                 bgcolor: '#eceff1',
@@ -93,16 +164,17 @@ function ClientsPage() {
           </Box>
         </Box>
 
-        <Box sx={{ px: 3, pb: 4 }}>
+        <Box sx={{ px: { xs: 2, sm: 3 }, pb: 4 }}>
           {/* Search Section */}
           <Box
             sx={{
-              p: 3,
+              p: { xs: 2, sm: 3 },
               mb: 3,
               border: '1px solid #e0e0e0',
               borderRadius: 1,
               display: 'flex',
-              alignItems: 'center',
+              flexDirection: { xs: 'column', md: 'row' },
+              alignItems: { xs: 'stretch', md: 'center' },
               gap: 2,
             }}
           >
@@ -110,6 +182,7 @@ function ClientsPage() {
               label="Nombre"
               variant="outlined"
               size="small"
+              fullWidth
               sx={{ flexGrow: 1 }}
               value={filters.nombre}
               onChange={(e) => setFilters({ ...filters, nombre: e.target.value })}
@@ -119,27 +192,31 @@ function ClientsPage() {
               label="Identificación"
               variant="outlined"
               size="small"
+              fullWidth
               sx={{ flexGrow: 1 }}
               value={filters.identificacion}
               onChange={(e) => setFilters({ ...filters, identificacion: e.target.value })}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />
-            <IconButton
+            <Button
+              variant="outlined"
               onClick={handleSearch}
               disabled={loading}
+              startIcon={<SearchIcon />}
               sx={{
-                border: '1px solid #b0bec5',
-                borderRadius: '50%',
-                p: 1,
+                borderColor: '#b0bec5',
+                color: '#546e7a',
+                minWidth: { xs: '100%', md: 'auto' },
+                py: 1,
               }}
             >
-              <SearchIcon sx={{ color: '#546e7a' }} />
-            </IconButton>
+              Buscar
+            </Button>
           </Box>
 
           {/* Table Section */}
-          <TableContainer component={Box} sx={{ border: '1px solid #e0e0e0', borderRadius: 1 }}>
-            <Table size="small">
+          <TableContainer component={Box} sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflowX: 'auto' }}>
+            <Table size="small" sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow sx={{ bgcolor: '#2979ff' }}>
                   <TableCell sx={{ color: '#fff', fontWeight: 700, py: 1.5 }}>Identificación</TableCell>
@@ -147,6 +224,7 @@ function ClientsPage() {
                   <TableCell align="right" sx={{ color: '#fff', fontWeight: 700, py: 1.5, pr: 4 }}>Acciones</TableCell>
                 </TableRow>
               </TableHead>
+
               <TableBody>
                 {loading ? (
                   <TableRow>

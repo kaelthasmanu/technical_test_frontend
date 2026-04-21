@@ -150,21 +150,39 @@ function Layout({ children, houseItem = false }) {
           borderBottom: '3px solid #00a0e9', // Brighter blue accent line
         }}
       >
-        <Toolbar variant="dense" sx={{ minHeight: 48 }}>
-          <IconButton color="inherit" edge="start" onClick={handleToggle} sx={{ mr: 1 }}>
+        <Toolbar variant="dense" sx={{ minHeight: 48, px: { xs: 1, sm: 2 } }}>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={handleToggle}
+            sx={{ mr: { xs: 0.5, sm: 1 } }}
+          >
             <MenuIcon sx={{ fontSize: 20 }} />
           </IconButton>
           <Typography
             variant="caption"
             noWrap
             fontWeight={600}
-            sx={{ flexGrow: 1, letterSpacing: '0.05em', color: '#fff', fontSize: '0.8rem' }}
+            sx={{
+              flexGrow: 1,
+              letterSpacing: '0.05em',
+              color: '#fff',
+              fontSize: { xs: '0.7rem', sm: '0.8rem' },
+            }}
           >
             COMPANIA PRUEBA
           </Typography>
           <Typography
             variant="body2"
-            sx={{ mr: 2, color: '#fff', fontSize: '0.85rem' }}
+            noWrap
+            sx={{
+              mr: { xs: 1, sm: 2 },
+              color: '#fff',
+              fontSize: { xs: '0.75rem', sm: '0.85rem' },
+              maxWidth: { xs: '80px', sm: 'none' },
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
           >
             {username || 'Nombre de Usuario'}
           </Typography>
@@ -173,21 +191,22 @@ function Layout({ children, houseItem = false }) {
             sx={{
               bgcolor: '#fff',
               color: '#001529',
-              width: 32,
-              height: 32,
-              borderRadius: 3, // M3 style: small containers use standard rounded corners (8-12px -> 3*8px)
+              width: { xs: 28, sm: 32 },
+              height: { xs: 28, sm: 32 },
+              borderRadius: 1.5,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               transition: 'all 0.2s ease-in-out',
-              '&:hover': { 
+              flexShrink: 0,
+              '&:hover': {
                 bgcolor: 'rgba(255,255,255,0.92)',
-                transform: 'scale(1.05)'
+                transform: 'scale(1.05)',
               },
             }}
           >
-            <ExitToAppIcon sx={{ fontSize: 18 }} />
+            <ExitToAppIcon sx={{ fontSize: { xs: 16, sm: 18 } }} />
           </Box>
         </Toolbar>
       </AppBar>
@@ -195,7 +214,7 @@ function Layout({ children, houseItem = false }) {
       {/* ── Side Drawer ─────────────────────────────────────────── */}
       <Box
         component="nav"
-        sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
+        sx={{ width: { lg: DRAWER_WIDTH }, flexShrink: { lg: 0 } }}
       >
         {/* Mobile: temporary */}
         <Drawer
@@ -204,8 +223,8 @@ function Layout({ children, houseItem = false }) {
           onClose={handleToggle}
           ModalProps={{ keepMounted: true }}
           sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { ...drawerSx, mt: '64px' },
+            display: { xs: 'block', lg: 'none' },
+            '& .MuiDrawer-paper': { ...drawerSx, mt: { xs: '48px', sm: '64px' } },
           }}
         >
           <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
@@ -215,12 +234,12 @@ function Layout({ children, houseItem = false }) {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', md: 'block' },
+            display: { xs: 'none', lg: 'block' },
             '& .MuiDrawer-paper': drawerSx,
           }}
           open
         >
-          <Toolbar /> {/* spacer for AppBar height */}
+          <Toolbar variant="dense" /> {/* spacer for AppBar height */}
           <DrawerContent username={username} onNavigate={handleNavigate} items={menuItems} />
         </Drawer>
       </Box>
@@ -230,16 +249,17 @@ function Layout({ children, houseItem = false }) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
+          p: { xs: 2, sm: 3 },
+          width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
           minHeight: '100vh',
-          mt: '64px',
+          mt: { xs: '48px', sm: '64px' },
           bgcolor: 'background.default',
         }}
       >
         {children}
       </Box>
     </Box>
+
   );
 }
 

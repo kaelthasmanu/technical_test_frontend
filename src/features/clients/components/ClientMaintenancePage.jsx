@@ -40,10 +40,27 @@ function ClientMaintenancePage() {
         </Box>
       )}
       {!loading && (
-      <Paper elevation={1} sx={{ p: 4, borderRadius: 2 }}>
+      <Paper elevation={1} sx={{ p: { xs: 2, sm: 4 }, borderRadius: 2 }}>
         {/* Header Section */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            alignItems: { xs: 'center', sm: 'center' },
+            mb: 4,
+            gap: 2,
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              alignItems: 'center',
+              gap: 2,
+              textAlign: { xs: 'center', sm: 'left' },
+            }}
+          >
             <Box sx={{ position: 'relative' }}>
               <Avatar
                 src={formData.imagen}
@@ -80,9 +97,10 @@ function ClientMaintenancePage() {
               Mantenimiento de clientes
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, width: { xs: '100%', sm: 'auto' } }}>
             <Button
               variant="contained"
+              fullWidth={true}
               startIcon={<SaveIcon />}
               sx={{
                 bgcolor: '#eceff1',
@@ -99,6 +117,7 @@ function ClientMaintenancePage() {
             </Button>
             <Button
               variant="contained"
+              fullWidth={true}
               startIcon={<ArrowBackIcon />}
               sx={{
                 bgcolor: '#eceff1',
@@ -116,6 +135,7 @@ function ClientMaintenancePage() {
         </Box>
 
         {/* Form Grid */}
+
         <form onSubmit={handleSubmit} noValidate>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
