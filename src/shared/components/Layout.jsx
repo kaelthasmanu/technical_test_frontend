@@ -14,7 +14,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../features/auth/hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
@@ -27,6 +27,8 @@ const NAV_ITEMS = [
 ];
 
 function DrawerContent({ username, onNavigate, items = NAV_ITEMS }) {
+  const location = useLocation();
+
   return (
     <Box sx={{ height: '100%', overflowY: 'auto', bgcolor: '#f4f7f9' }}>
       {/* User avatar + name */}
@@ -66,41 +68,49 @@ function DrawerContent({ username, onNavigate, items = NAV_ITEMS }) {
 
       {/* Nav menu */}
       <List disablePadding sx={{ pt: 2 }}>
-        {items.map((item) => (
-          <ListItemButton
-            key={item.path}
-            onClick={() => onNavigate(item.path)}
-            sx={{ 
-              py: 1,
-              px: 4,
-              '&:hover': { bgcolor: 'rgba(0,0,0,0.02)' }
-            }}
-          >
-            <Typography
-              sx={{
-                width: 35,
-                color: item.color,
-                fontWeight: 800,
-                fontSize: '1rem',
-                flexShrink: 0,
-                mr: 0.5
+        {items.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <ListItemButton
+              key={item.path}
+              onClick={() => onNavigate(item.path)}
+              sx={{ 
+                py: 1,
+                px: 4,
+                bgcolor: isActive ? 'rgba(0, 176, 255, 0.08)' : 'transparent',
+                borderLeft: isActive ? '4px solid #00b0ff' : '4px solid transparent',
+                '&:hover': { 
+                  bgcolor: isActive ? 'rgba(0, 176, 255, 0.12)' : 'rgba(0,0,0,0.04)',
+                }
               }}
             >
-              {item.abbr}
-            </Typography>
-            <ListItemText
-              primary={item.label}
-              primaryTypographyProps={{ 
-                variant: 'body1', 
-                fontWeight: 500,
-                color: '#546e7a',
-                fontSize: '1.1rem'
-              }}
-            />
-          </ListItemButton>
-        ))}
+              <Typography
+                sx={{
+                  width: 35,
+                  color: item.color,
+                  fontWeight: 800,
+                  fontSize: '1rem',
+                  flexShrink: 0,
+                  mr: 0.5
+                }}
+              >
+                {item.abbr}
+              </Typography>
+              <ListItemText
+                primary={item.label}
+                primaryTypographyProps={{ 
+                  variant: 'body1', 
+                  fontWeight: isActive ? 700 : 500,
+                  color: isActive ? '#00b0ff' : '#546e7a',
+                  fontSize: '1.1rem'
+                }}
+              />
+            </ListItemButton>
+          );
+        })}
       </List>
     </Box>
+
   );
 }
 

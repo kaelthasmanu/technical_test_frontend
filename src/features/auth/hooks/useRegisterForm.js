@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import axiosInstance from '../../../shared/api/axiosInstance';
 import { ENDPOINTS } from '../../../shared/api/endpoints';
 import { registerSchema } from '../schemas/authSchemas';
+import { ROUTES } from '../../../constants/routes';
 
 export function useRegisterForm() {
   const history = useHistory();
@@ -21,7 +22,7 @@ export function useRegisterForm() {
 
     try {
       await axiosInstance.post(ENDPOINTS.REGISTER, data);
-      history.push('/login', {
+      history.push(ROUTES.LOGIN, {
         successMessage: 'Registro completado correctamente. Ya puede iniciar sesión.'
       });
     } catch (err) {
