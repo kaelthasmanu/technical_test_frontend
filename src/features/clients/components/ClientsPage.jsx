@@ -18,9 +18,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Layout from '../../../shared/components/Layout';
 import { useClients } from '../hooks/useClients';
 import DeleteConfirmDialog from './DeleteConfirmDialog';
+import ClientDetailDialog from './ClientDetailDialog';
 
 function ClientsPage() {
   const {
@@ -29,6 +31,7 @@ function ClientsPage() {
     setFilters,
     deleteId,
     clientToDelete,
+    selectedClient,
     loading,
     handleSearch,
     handleEdit,
@@ -37,6 +40,8 @@ function ClientsPage() {
     handleDeleteClick,
     confirmDelete,
     closeDeleteDialog,
+    handleDetailClick,
+    closeDetailDialog,
   } = useClients();
 
   return (
@@ -161,6 +166,9 @@ function ClientsPage() {
                       <TableCell sx={{ color: '#78909c', py: 2 }}>{client.identificacion}</TableCell>
                       <TableCell sx={{ color: '#78909c', py: 2 }}>{`${client.nombre} ${client.apellidos || ''}`}</TableCell>
                       <TableCell align="right" sx={{ py: 1, pr: 2 }}>
+                        <IconButton size="small" sx={{ mr: 1 }} onClick={() => handleDetailClick(client)}>
+                          <VisibilityIcon sx={{ fontSize: 20, color: '#546e7a' }} />
+                        </IconButton>
                         <IconButton size="small" sx={{ mr: 1 }} onClick={() => handleEdit(client.id)}>
                           <EditIcon sx={{ fontSize: 20, color: '#546e7a' }} />
                         </IconButton>
@@ -183,6 +191,13 @@ function ClientsPage() {
         onClose={closeDeleteDialog}
         onConfirm={confirmDelete}
         itemName={clientToDelete}
+      />
+
+      {/* Detail Modal */}
+      <ClientDetailDialog
+        open={Boolean(selectedClient)}
+        onClose={closeDetailDialog}
+        clientId={selectedClient?.id}
       />
     </Layout>
   );

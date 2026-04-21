@@ -17,6 +17,9 @@ export const useClients = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [clientToDelete, setClientToDelete] = useState('');
 
+  // State for detail modal
+  const [selectedClient, setSelectedClient] = useState(null);
+
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -68,12 +71,21 @@ export const useClients = () => {
     setClientToDelete('');
   };
 
+  const handleDetailClick = (client) => {
+    setSelectedClient(client);
+  };
+
+  const closeDetailDialog = () => {
+    setSelectedClient(null);
+  };
+
   return {
     clients,
     filters,
     setFilters,
     deleteId,
     clientToDelete,
+    selectedClient,
     loading,
     handleSearch,
     handleEdit,
@@ -82,5 +94,7 @@ export const useClients = () => {
     handleDeleteClick,
     confirmDelete,
     closeDeleteDialog,
+    handleDetailClick,
+    closeDetailDialog,
   };
 };
