@@ -78,10 +78,11 @@ export const useClients = () => {
     try {
       await clientsService.deleteClient(deleteId);
       setClients(clients.filter(c => c.id !== deleteId));
-      setDeleteId(null);
       notification.success('El proceso se realizó correctamente.');
     } catch (err) {
       notification.error('Hubo un inconveniente con la transacción.');
+    } finally {
+      closeDeleteDialog();
     }
   };
 
