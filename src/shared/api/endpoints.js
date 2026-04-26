@@ -1,4 +1,4 @@
-const BASE_URL = 'https://pruebareactjs.test-class.com/Api';
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://pruebareactjs.test-class.com/Api';
 
 export const API_BASE_URL = BASE_URL;
 
