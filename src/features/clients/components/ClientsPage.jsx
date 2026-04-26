@@ -109,11 +109,69 @@ ActionMenu.propTypes = {
   onDelete: PropTypes.func.isRequired,
 };
 
+const ClientsTable = React.memo(function ClientsTable({ clients, loading, onDetail, onEdit, onDelete }) {
+  return (
+    <Box sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 4 }}>
+      <TableContainer
+        component={Box}
+        sx={{
+          border: '1px solid #e0e0e0',
+          borderRadius: 1,
+          overflowX: 'auto',
+          maxWidth: '100%',
+          '&::-webkit-scrollbar': { height: 6 },
+          '&::-webkit-scrollbar-thumb': { bgcolor: '#cfd8dc', borderRadius: 3 }
+        }}
+      >
+        <Table size="small" sx={{ minWidth: 650 }}>
+          <TableHead>
+            <TableRow sx={{ bgcolor: '#2979ff' }}>
+              <TableCell sx={{ color: '#fff', fontWeight: 700, py: 1.5 }}>Identificación</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700, py: 1.5 }}>Nombre completo</TableCell>
+              <TableCell align="right" sx={{ color: '#fff', fontWeight: 700, py: 1.5, pr: 4 }}>Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={3} align="center" sx={{ py: 3 }}>
+                  Cargando clientes...
+                </TableCell>
+              </TableRow>
+            ) : clients.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={3} align="center" sx={{ py: 3 }}>
+                  No se encontraron clientes. Pulse la lupa para buscar.
+                </TableCell>
+              </TableRow>
+            ) : (
+              clients.map((client) => (
+                <TableRow key={client.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell sx={{ color: '#78909c', py: 2 }}>{client.identificacion}</TableCell>
+                  <TableCell sx={{ color: '#78909c', py: 2 }}>{`${client.nombre} ${client.apellidos || ''}`}</TableCell>
+                  <TableCell align="right" sx={{ py: 1, pr: 2 }}>
+                    <ActionMenu
+                      client={client}
+                      onDetail={onDetail}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+});
+
 function ClientsPage() {
   const {
     clients,
     filters,
-    setFilters,
     deleteId,
     clientToDelete,
     selectedClient,
@@ -128,6 +186,13 @@ function ClientsPage() {
     handleDetailClick,
     closeDetailDialog,
   } = useClients();
+  const [searchValues, setSearchValues] = useState(filters);
+
+  const updateSearchValue = (field) => (event) => {
+    setSearchValues((current) => ({ ...current, [field]: event.target.value }));
+  };
+
+  const onSearch = () => handleSearch(searchValues);
 
   return (
     <Layout>
@@ -205,9 +270,9 @@ function ClientsPage() {
               size="small"
               fullWidth
               sx={{ flexGrow: 1 }}
-              value={filters.nombre}
-              onChange={(e) => setFilters({ ...filters, nombre: e.target.value })}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              value={searchValues.nombre}
+              onChange={updateSearchValue('nombre')}
+              onKeyPress={(e) => e.key === 'Enter' && onSearch()}
             />
             <TextField
               label="Identificación"
@@ -215,13 +280,13 @@ function ClientsPage() {
               size="small"
               fullWidth
               sx={{ flexGrow: 1 }}
-              value={filters.identificacion}
-              onChange={(e) => setFilters({ ...filters, identificacion: e.target.value })}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              value={searchValues.identificacion}
+              onChange={updateSearchValue('identificacion')}
+              onKeyPress={(e) => e.key === 'Enter' && onSearch()}
             />
             <Button
               variant="outlined"
-              onClick={handleSearch}
+              onClick={onSearch}
               disabled={loading}
               startIcon={<SearchIcon />}
               sx={{
@@ -238,61 +303,13 @@ function ClientsPage() {
 
         <Divider />
 
-        <Box sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 4 }}>
-          {/* Table Section */}
-          <TableContainer 
-            component={Box} 
-            sx={{ 
-              border: '1px solid #e0e0e0', 
-              borderRadius: 1, 
-              overflowX: 'auto',
-              maxWidth: '100%',
-              '&::-webkit-scrollbar': { height: 6 },
-              '&::-webkit-scrollbar-thumb': { bgcolor: '#cfd8dc', borderRadius: 3 }
-            }}
-          >
-            <Table size="small" sx={{ minWidth: 650 }}>
-              <TableHead>
-                <TableRow sx={{ bgcolor: '#2979ff' }}>
-                  <TableCell sx={{ color: '#fff', fontWeight: 700, py: 1.5 }}>Identificación</TableCell>
-                  <TableCell sx={{ color: '#fff', fontWeight: 700, py: 1.5 }}>Nombre completo</TableCell>
-                  <TableCell align="right" sx={{ color: '#fff', fontWeight: 700, py: 1.5, pr: 4 }}>Acciones</TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={3} align="center" sx={{ py: 3 }}>
-                      Cargando clientes...
-                    </TableCell>
-                  </TableRow>
-                ) : clients.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={3} align="center" sx={{ py: 3 }}>
-                      No se encontraron clientes. Pulse la lupa para buscar.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  clients.map((client) => (
-                    <TableRow key={client.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                      <TableCell sx={{ color: '#78909c', py: 2 }}>{client.identificacion}</TableCell>
-                      <TableCell sx={{ color: '#78909c', py: 2 }}>{`${client.nombre} ${client.apellidos || ''}`}</TableCell>
-                      <TableCell align="right" sx={{ py: 1, pr: 2 }}>
-                        <ActionMenu
-                          client={client}
-                          onDetail={handleDetailClick}
-                          onEdit={handleEdit}
-                          onDelete={handleDeleteClick}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+        <ClientsTable
+          clients={clients}
+          loading={loading}
+          onDetail={handleDetailClick}
+          onEdit={handleEdit}
+          onDelete={handleDeleteClick}
+        />
       </Paper>
 
       {/* Delete Confirmation Modal */}

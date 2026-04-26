@@ -38,14 +38,15 @@ export const useClients = () => {
     });
   }, []);
 
-  const handleSearch = useCallback(async () => {
+  const handleSearch = useCallback(async (searchFilters = filters) => {
     setLoading(true);
     try {
       const results = await clientsService.getClients({
-        ...filters,
-        usuarioId: userId
+        ...searchFilters,
+        usuarioId: userId,
       });
-      setClients(applyFilters(results, filters));
+      setFilters(searchFilters);
+      setClients(applyFilters(results, searchFilters));
     } catch (err) {
       notification.error('Hubo un inconveniente con la transacción.');
     } finally {
@@ -57,47 +58,47 @@ export const useClients = () => {
     handleSearch();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleEdit = (id) => {
+  const handleEdit = useCallback((id) => {
     history.push(`${ROUTES.CLIENT_MAINTENANCE}/${id}`);
-  };
+  }, [history]);
 
-  const handleAdd = () => {
+  const handleAdd = useCallback(() => {
     history.push(ROUTES.CLIENT_MAINTENANCE);
-  };
+  }, [history]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     history.push(ROUTES.HOME);
-  };
+  }, [history]);
 
-  const handleDeleteClick = (client) => {
+  const handleDeleteClick = useCallback((client) => {
     setDeleteId(client.id);
     setClientToDelete(client.nombre);
-  };
+  }, []);
 
-  const confirmDelete = async () => {
+  const closeDeleteDialog = useCallback(() => {
+    setDeleteId(null);
+    setClientToDelete('');
+  }, []);
+
+  const confirmDelete = useCallback(async () => {
     try {
       await clientsService.deleteClient(deleteId);
-      setClients(clients.filter(c => c.id !== deleteId));
+      setClients((currentClients) => currentClients.filter((c) => c.id !== deleteId));
       notification.success('El proceso se realizó correctamente.');
     } catch (err) {
       notification.error('Hubo un inconveniente con la transacción.');
     } finally {
       closeDeleteDialog();
     }
-  };
+  }, [deleteId, closeDeleteDialog, notification]);
 
-  const closeDeleteDialog = () => {
-    setDeleteId(null);
-    setClientToDelete('');
-  };
-
-  const handleDetailClick = (client) => {
+  const handleDetailClick = useCallback((client) => {
     setSelectedClient(client);
-  };
+  }, []);
 
-  const closeDetailDialog = () => {
+  const closeDetailDialog = useCallback(() => {
     setSelectedClient(null);
-  };
+  }, []);
 
   return {
     clients,
